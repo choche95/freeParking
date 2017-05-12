@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>parkin</title>
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="materialize/css/materialize.css">
+    <!--Let browser know website is optimized for mobile-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script src="https://cdn.firebase.com/v0/firebase.js"></script>
+    <style>
+
+       #map {
+        height: 400px;
+        width: 100%;
+       }
+       .map-control{
+         background-color: #fff;
+         border: 1px solid #ccc;
+         box-shadow: 0 2px 2px rgba(33, 33, 33, 0.4);
+         font-family: 'Roboto','sans-serif';
+         margin: 10px;
+         /* Hide the control initially, to prevent it from appearing
+            before the map loads. */
+         display: none;
+       }
+       #map .map-control { display: block; }
+    </style>
+  </head>
+  <body>
+
+    <nav>
+     <div class="nav-wrapper">
+       <a href="#" class="brand-logo center">Soy un logo</a>
+       <ul id="nav-mobile" class="left hide-on-med-and-down">
+         <li><a href="main.html">Estadisticas</a></li>
+       </ul>
+     </div>
+   </nav>
+   <div>
+     <div id="floating-panel">
+       <input onclick="checkMarkers();" type=button value="Hide Markers">
+      <!-- <input onclick="showMarkers();" type=button value="Show markers"> -->
+    </div>
+     <div id="map"></div>
+   </div>
+   <div>
+     <input type="button" oneclick=>
+   </div>
+   <script>
+
+      //FIRE BASE 
+      // $(function() {
+      //   // Set up an event that is triggered whenever a new climate-data point is added to firebase
+      //   var fb = new Firebase('https://freeparking-c8b1d.firebaseio.com/unicaribe/zona-A/1');
+      //   fb.on('child_added', function(data) {
+      //       var dataVal = data.val();
+      //       console.log(dataVal);
+      //     });
+      //   });
+      //FIREBASE
+
+      var map;
+      var markers = [];
+      var img_o = 'img/cancel.png';
+      var img_l = 'img/checked.png';
+
+      var cajon1 = {lat:21.200251, lng:-86.823910};
+      var cajon2 = {lat:21.200163, lng:-86.823684};
+      var unicaribe = {lat:21.200197, lng:-86.823850};
+
+      function initMap() {
+          map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 20,
+          center:unicaribe,
+          mapTypeId: 'terrain',
+          styles: [
+            {elementType: 'geometry', stylers: [{color: '#242f3e'}]},
+            {elementType: 'labels.text.stroke', stylers: [{color: '#242f3e'}]},
+            {elementType: 'labels.text.fill', stylers: [{color: '#746855'}]},
+            {
+              featureType: 'administrative.locality',
+              elementType: 'labels.text.fill',
+              stylers: [{color: '#d59563'}]
+            },
+            {
+              featureType: 'road',
+              elementType: 'geometry',
+              stylers: [{color: '#38414e'}]
+            },
+            {
+              featureType: 'road',
+              elementType: 'geometry.stroke',
+              stylers: [{color: '#212a37'}]
+            },
+          ]
+        });
+        // This event listener will call addMarker() when the map is clicked.
+
+
+        // Adds a marker at the center of the map.
+        addMarker(cajon1);
+        addMarker(cajon2);
+        // Adds a marker at the center of the map.
+        addMarker_O(cajon1);
+        addMarker_O(cajon2);
+
+      }// end initMap
+      // Adds a marker to the map and push to the array.
+      var img_o = 'img/cancel.png';
+      var img_l = 'img/checked.png';
+      var estado1=true;
+      var estado2=false;
+      function addMarker(location) {
+        var marker = new google.maps.Marker({
+          position: location,
+          icon: img_l,
+          map: map,
+          animation: google.maps.Animation.DROP,
+        });
+        markers.push(marker);
+      }
+      function addMarker_O(location) {
+        var marker2 = new google.maps.Marker({
+          position: location,
+          icon: img_o,
+          map: map,
+          animation: google.maps.Animation.DROP,
+        });
+        markers.push(marker2);
+      }
+      function checkMarkers() {
+        for (var i = 0; i < markers.length; i++) {
+          if (i==0){
+            if (estado1==true) {
+              markers[0].setMap(map);
+
+              markers[2].setMap(null);
+              estado1=false;
+              console.log("libre true");
+            }
+            else {
+              markers[0].setMap(null);
+              markers[2].setMap(map);
+              estado1=true;
+              console.log("libre false");
+            }
+          }
+          if (i==1){
+            if (estado2==true) {
+              markers[1].setMap(map);
+              markers[3].setMap(null);
+              estado2=false;
+              console.log("libre true");
+            }
+            else {
+              markers[1].setMap(null);
+              markers[3].setMap(map);
+              estado2=true;
+              console.log("libre false");
+            }
+          }
+
+        }
+      }
+
+    </script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD6VNhaW4ldEJNJt4t-awvbOLr9uVa_ysE&callback=initMap">
+    </script>
+
+  </body>
+</html>
